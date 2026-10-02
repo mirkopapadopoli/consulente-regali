@@ -14,6 +14,8 @@ export default defineConfig({
           APIFY_TOKEN: "test-apify",
           OPENROUTER_API_KEY: "test-openrouter",
           TURNSTILE_SECRET: "test-turnstile",
+          // Chiave di test Turnstile: la sitekey vera vale solo su cosaregalo.mirkopapadopoli.com.
+          TURNSTILE_SITE_KEY: "1x00000000000000000000AA",
           VISITOR_SALT: "test-salt",
           TELEGRAM_BOT_TOKEN: "test-telegram",
           TELEGRAM_CHAT_ID: "1",
