@@ -1,42 +1,51 @@
 import type { Capito } from "../../shared/types";
 import { dataRoma, oraRoma } from "../formato";
 
-export const NUMERALI = ["I", "II", "III"];
+export const NUMERALI = ["01", "02", "03"];
 
-/** L'etichetta compilata: i campi si scrivono uno alla volta mentre il consulente prepara. */
+const COLORI_PILLOLA = ["menta", "viola", "giallo", "bianco"];
+
+/** Cosa ho capito: pillole colorate, una per dato estratto. */
 export function Etichetta({ capito, titolo, rilevatoIl }: { capito: Capito; titolo?: string; rilevatoIl?: string }) {
   const righe: [string, string][] = [];
   if (capito.destinatario) righe.push(["Per", capito.destinatario]);
   if (capito.interessi.length) righe.push(["Ama", capito.interessi.join(", ")]);
   if (capito.budgetMax) righe.push(["Fino a", `${capito.budgetMax.toLocaleString("it-IT")} €`]);
   if (capito.occasione) righe.push(["Occasione", capito.occasione]);
-  if (rilevatoIl) righe.push(["Prezzi del", `${dataRoma(rilevatoIl)}, ore ${oraRoma(rilevatoIl)}`]);
   return (
-    <section class="etichetta etichetta-compilata" aria-label="Cosa ho capito">
-      <div class="etichetta-cornice">
-        {titolo && <h1 class="etichetta-titolo">{titolo}</h1>}
-        <dl class="etichetta-campi">
-          {righe.map(([campo, valore], i) => (
-            <div class="campo" key={campo} style={{ "--i": i }}>
-              <dt>{campo}</dt>
-              <dd>{valore}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
+    <section class="capito" aria-label="Cosa ho capito">
+      {titolo ? <h1 class="titolo-condiviso">{titolo}</h1> : <p class="etichetta-mono">Ho capito</p>}
+      <ul class="pillole">
+        {righe.map(([campo, valore], i) => (
+          <li class={`pillola pillola-${COLORI_PILLOLA[i % COLORI_PILLOLA.length]}`} key={campo} style={{ "--i": i }}>
+            <span class="pillola-campo">{campo}</span>
+            <span class="pillola-valore">{valore}</span>
+          </li>
+        ))}
+      </ul>
+      {rilevatoIl ? (
+        <p class="etichetta-mono etichetta-tenue">
+          Prezzi del {dataRoma(rilevatoIl)} · ore {oraRoma(rilevatoIl)}
+        </p>
+      ) : null}
     </section>
   );
 }
 
-/** Le tre preparazioni in corso: una riga per ricerca, numerate come in officina. */
+/** La timeline delle tre ricerche in corso, sul binario verticale. */
 export function Preparazioni({ ricerche }: { ricerche: string[] }) {
   return (
-    <ol class="preparazioni" aria-live="polite">
+    <ol class="flusso" aria-live="polite">
       {ricerche.map((r, i) => (
-        <li class="preparazione" key={r} style={{ "--i": i }}>
-          <span class="numerale">{NUMERALI[i]}</span>
-          <span class="preparazione-nome">{r}</span>
-          <span class="stato-segno">in preparazione</span>
+        <li class="flusso-voce" key={r} style={{ "--i": i }}>
+          <span class="flusso-tempo">Ricerca {NUMERALI[i]}</span>
+          <div class="flusso-card">
+            <span class="flusso-stato">
+              <span class="punto" aria-hidden="true" />
+              In corso
+            </span>
+            <span class="flusso-titolo">{r}</span>
+          </div>
         </li>
       ))}
     </ol>

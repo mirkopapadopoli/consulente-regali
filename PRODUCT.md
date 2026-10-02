@@ -35,12 +35,14 @@ It starts from the person, not the product: no catalogue to browse, no deal hunt
 - Product titles from Amazon are long and keyword-stuffed.
 - No accounts, no login, no cookie banner (one technical cookie).
 - Copy is Italian.
+- Fonts are self-hosted (Anton, Hanken Grotesk, JetBrains Mono, Newsreader), ~100 KB total.
 
 ## Brand Commitments
 
-- Name: **cosaregalo** (lowercase in the logo today).
-- Voice: elegant consultant, personal-shopper register; addresses the visitor with "tu", measured and polished, never shouty or salesy.
-- Footer credits the maker: a project made by Mirko Papadopoli.
+- Name: **cosaregalo**; on the home hero it is written **cosaregalo?** with the question mark in mint (the visitor's own question). The name stays "cosaregalo" in the bar, domain and links.
+- Visual system: adapted from The Verge 2024 (dark canvas, mint/ultraviolet hazard accents, color-block tiles) — chosen by Mirko on 2026-10-02 after rejecting the "Officina" direction. See DESIGN.md.
+- Voice: confident and energetic, editorial tech-magazine register; addresses the visitor with "tu"; short headlines ("Tre regali su misura, in pochi secondi."), never salesy or shouty with fake urgency.
+- Footer credits the maker: "Un progetto di Mirko Papadopoli".
 - Affiliate disclosure "In qualità di Affiliato Amazon ricevo un guadagno dagli acquisti idonei" must stay clearly visible (Amazon + AGCM), not only in fine print.
 
 ## Evidence on Hand
