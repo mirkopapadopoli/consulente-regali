@@ -5,15 +5,15 @@ import type { ContestoGuard, Difesa, Esito } from "./tipi";
 import { difesaTurnstile } from "./turnstile";
 import { difesaVelocita } from "./velocita";
 
-async function esegui(difese: [string, Difesa][], ctx: ContestoGuard, registra: boolean): Promise<Esito> {
+async function esegui(difese: [string, Difesa][], ctx: ContestoGuard, registra: boolean, seGuasta: Esito): Promise<Esito> {
   for (const [nome, difesa] of difese) {
     let esito: Esito;
     try {
       esito = await difesa(ctx);
     } catch (e) {
-      // D1 o binding non disponibili: si procede, i tetti nei pannelli restano la garanzia (spec §10.1).
       console.error(`difesa ${nome} non eseguibile`, e);
-      continue;
+      if (seGuasta === "procedi") continue;
+      return seGuasta;
     }
     if (esito === "procedi") continue;
     const dettaglio = typeof esito === "object" ? esito.blocca : "leggera";
@@ -28,12 +28,15 @@ async function esegui(difese: [string, Difesa][], ctx: ContestoGuard, registra: 
   return "procedi";
 }
 
-/** Prima di tutto: ferma raffiche e bot prima di cache e AI. */
+/** Prima di tutto: ferma raffiche e bot prima di cache e AI. Un binding guasto non blocca gli utenti. */
 export function checkAccesso(ctx: ContestoGuard): Promise<Esito> {
-  return esegui([["velocita", difesaVelocita], ["turnstile", difesaTurnstile]], ctx, false);
+  return esegui([["velocita", difesaVelocita], ["turnstile", difesaTurnstile]], ctx, false, "procedi");
 }
 
-/** Subito prima di Apify: le risposte dalla cache non consumano quota. */
+/**
+ * Subito prima di Apify: le risposte dalla cache non consumano quota.
+ * Se D1 non risponde i contatori non sono affidabili: modalità leggera, nessuna spesa Apify.
+ */
 export function checkSpesa(ctx: ContestoGuard): Promise<Esito> {
-  return esegui([["quota_ip", difesaQuotaIp], ["quota_visitatore", difesaQuotaVisitatore], ["tetto_globale", difesaTettoGlobale]], ctx, true);
+  return esegui([["quota_ip", difesaQuotaIp], ["quota_visitatore", difesaQuotaVisitatore], ["tetto_globale", difesaTettoGlobale]], ctx, true, "leggera");
 }

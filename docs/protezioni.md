@@ -18,6 +18,8 @@ La quota per IP impedisce di aggirare la quota per visitatore cancellando il coo
 
 Ordine: il limite di velocità viene prima di Turnstile (una raffica viene respinta senza chiamare siteverify); quota e tetto girano solo subito prima di Apify, così le risposte dalla cache non consumano quota.
 
+Se D1 non risponde, quote e tetto non sono verificabili: tutti in modalità leggera finché D1 non torna (scelta del 2026-10-02, chiude l'ultima strada per un abuso).
+
 Oltre quota o tetto la ricerca continua in **modalità leggera** (idee + "Cerca su Amazon", nessuna chiamata Apify).
 
 Le var si cambiano da Cloudflare → Workers → consulente-regali → Settings → Variables, senza deploy di codice.

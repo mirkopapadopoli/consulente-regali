@@ -105,9 +105,14 @@ describe("checkSpesa", () => {
     expect(r).toEqual({ tipo: "blocco", difesa: "quota_visitatore", dettaglio: "leggera" });
   });
 
-  it("se D1 non risponde procede (i tetti nei pannelli restano la garanzia)", async () => {
+  it("se D1 non risponde passa in leggera: senza contatori non si spende su Apify", async () => {
     const dbRotto = { prepare: () => { throw new Error("D1 giù"); } } as unknown as D1Database;
-    expect(await checkSpesa(ctx({ db: dbRotto }))).toBe("procedi");
+    expect(await checkSpesa(ctx({ db: dbRotto }))).toBe("leggera");
+  });
+
+  it("se il limitatore di velocità non risponde, l'accesso prosegue verso Turnstile", async () => {
+    const rotto = { limit: async () => { throw new Error("binding giù"); } };
+    expect(await checkAccesso(ctx({ rateLimiter: rotto }))).toBe("procedi");
   });
 });
 

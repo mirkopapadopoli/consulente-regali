@@ -310,7 +310,7 @@ Nota: il token Apify usato negli spike è passato in chat; va rigenerato prima d
 | Apify: tutte falliscono | modalità leggera con le ricerche del passo 1 |
 | Meno di 3 prodotti filtrati | card trovate + idee per completare |
 | AI passo 2 non valido | fallback deterministico (§6.4) |
-| D1 non disponibile | ricerca completata senza cache, salvataggio né conteggi; Condividi nascosto; tetti esterni come garanzia |
+| D1 non disponibile | quote e tetto non verificabili → modalità leggera (nessuna spesa Apify); Condividi nascosto. Decisione di Mirko del 2026-10-02, dopo la revisione finale |
 | Turnstile siteverify irraggiungibile | modalità leggera |
 
 ### 10.2 Test (Vitest + `@cloudflare/vitest-pool-workers`)
