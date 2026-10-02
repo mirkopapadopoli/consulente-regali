@@ -3,3 +3,5 @@ node_modules/
 dist/
 .wrangler/
 .dev.vars
+.impeccable/review/
+.impeccable/config.local.json

@@ -1,0 +1,114 @@
+{
+  "title": "Scegli il mondo visivo di cosaregalo",
+  "question": "Il sorteggio ha assegnato l'Officina: le etichette delle antiche farmacie e officine profumiere italiane. Tienila, scegli un'alternativa o rilancia.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Officina",
+      "kicker": "THE ROLL",
+      "lineage": "etichette delle officine farmaceutiche e profumiere storiche (Firenze, Parma, Milano)",
+      "thesis": "Ogni regalo è una preparazione su misura: il consulente compila l'etichetta per quella persona e prepara tre rimedi alla domanda 'cosa le regalo?'.",
+      "palette": ["#f3f5f4", "#173d30", "#b06a1f", "#14171a", "#a8893a"],
+      "materials": ["etichetta stampata con filetto doppio", "vetro farmaceutico verde e ambra", "porcellana bianca fredda", "un filo dorato"],
+      "viewport": "Telefono: in alto 'cosaregalo' in maiuscoletto con filetto; al centro una grande etichetta vuota da compilare ('Per chi, cosa ama, fino a quanto') che è il campo di testo; sotto, tre esempi come etichette piccole. In attesa l'etichetta si compila riga per riga e le tre card arrivano come preparazioni numerate I, II, III.",
+      "risk": "Se spinto troppo può evocare la salute invece dei regali; va tenuto sul lato officina profumiera, mai ospedaliero.",
+      "raised": [
+        { "from": "challenger-orienteering", "raise": "Un solo colore, l'ambra, è riservato allo stato attivo: la ricerca in corso e il pulsante principale; tutto il resto resta in inchiostro e verde." },
+        { "from": "challenger-centre-rail", "raise": "Filetti a un pixel netti e zero arrotondamenti: gli stati (in preparazione, pronto, leggera) sono segni stampati sull'etichetta, non badge colorati." },
+        { "from": "challenger-type-specimen", "raise": "Gerarchia solo per contrasto di scala: il destinatario in grande sull'etichetta, i dati in maiuscoletto minuscolo." },
+        { "from": "challenger-japanese-density", "raise": "Le card sono moduli incorniciati da un sistema di filetti coerente, compatti su desktop per chi pianifica più regali." }
+      ]
+    },
+    {
+      "id": "model-pick",
+      "label": "Vetrina di bottega",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "vetrine delle botteghe e degli atelier milanesi, lettere in ottone sul vetro",
+      "thesis": "Il consulente allestisce una piccola vetrina per una sola persona: tre oggetti, illuminati, ognuno con il suo cartellino.",
+      "palette": ["#0f2a2a", "#e9e4da", "#c8a15a", "#7a1f2b"],
+      "materials": ["lacca verde scuro", "ottone", "vetro con lettere dorate", "cartellini scritti a mano"],
+      "viewport": "Fondo scuro come una vetrina la sera; il campo di testo è la lastra di vetro con la scritta in ottone; i risultati si accendono uno alla volta come luci della vetrina.",
+      "risk": "È la direzione più familiare per un consulente elegante: il look da boutique di lusso è quello su cui atterra la maggior parte dei progetti simili."
+    },
+    {
+      "id": "challenger-transit",
+      "label": "Linee del regalo",
+      "verdict": "competitive",
+      "lineage": "mappa della metropolitana (segnaletica di Bob Noorda per Milano)",
+      "thesis": "La richiesta è una stazione; le tre ricerche partono come tre linee colorate e arrivano ciascuna a un regalo.",
+      "palette": ["#1b2340", "#f2f2ee", "#d6342c", "#2f7d43", "#f0b323"],
+      "materials": ["smalto blu notte", "linee a 45 e 90 gradi", "pallini di interscambio"],
+      "viewport": "Le chip 'Ho capito' sono stazioni; durante l'attesa tre linee (rossa, verde, gialla) avanzano verso le card.",
+      "case": "Rende visibile il meccanismo delle 3 ricerche parallele (chiarezza alta) ma gli utenti non si identificano con un regalo come viaggio in metro.",
+      "risk": "Diventa un gimmick se le linee non servono davvero a leggere i risultati.",
+      "hero": "https://impeccable.style/worlds/cards/wayfinding-cartography-signage-midnight-transit-diagram-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/wayfinding-cartography-signage-midnight-transit-diagram.webp"
+    },
+    {
+      "id": "challenger-orienteering",
+      "label": "Mappa d'orientamento",
+      "verdict": "declined",
+      "lineage": "mappe ISO per orienteering",
+      "palette": ["#ffffff", "#7a3fa0", "#a86b2c"],
+      "materials": ["curve di livello", "percorso viola"],
+      "case": "Perde su entrambi gli assi: nessuno si riconosce, il regalo non è un percorso.",
+      "kept": "Un colore riservato solo allo stato attivo.",
+      "hero": "https://impeccable.style/worlds/cards/notation-diagram-systems-orienteering-map-hero.webp"
+    },
+    {
+      "id": "challenger-centre-rail",
+      "label": "Edizione con apparato",
+      "verdict": "declined",
+      "lineage": "edizioni critiche con margini annotati",
+      "palette": ["#f0ece4", "#151515", "#c0392b"],
+      "materials": ["filetti a un pixel", "maiuscoletto"],
+      "case": "Troppo da lettura colta per un compito veloce da telefono.",
+      "kept": "Stati come segni stampati a un pixel, zero arrotondamenti.",
+      "hero": "https://impeccable.style/worlds/cards/rw-centre-rail-reference-setting-hero.webp"
+    },
+    {
+      "id": "challenger-type-specimen",
+      "label": "Specimen tipografico",
+      "verdict": "declined",
+      "lineage": "specimen di caratteri variabili",
+      "palette": ["#fafafa", "#111111", "#ff4d2e"],
+      "materials": ["lettere giganti", "cursori di peso"],
+      "case": "Spettacolare ma non dice nulla del regalo.",
+      "kept": "Gerarchia solo per contrasto di scala.",
+      "hero": "https://impeccable.style/worlds/cards/variable-font-specimen-hero.webp"
+    },
+    {
+      "id": "challenger-japanese-density",
+      "label": "Portale ad alta densità",
+      "verdict": "declined",
+      "lineage": "siti giapponesi densi",
+      "palette": ["#ffffff", "#111111", "#d0021b"],
+      "materials": ["moduli incorniciati", "linguette rosse"],
+      "case": "Sembra un e-commerce, cioè proprio ciò che va evitato.",
+      "kept": "Sistema di filetti coerente per i moduli.",
+      "hero": "https://impeccable.style/worlds/cards/japanese-high-density-web-hero.webp"
+    },
+    {
+      "id": "challenger-crouwel",
+      "label": "Griglia Crouwel",
+      "verdict": "declined",
+      "lineage": "specimen su griglia di Wim Crouwel",
+      "palette": ["#ffffff", "#1a1a1a", "#0055ff"],
+      "materials": ["griglia costruttiva", "lettere modulari"],
+      "case": "Freddo e tecnico, lontano dalla voce da consulente elegante.",
+      "kept": "Tutto allineato a un'unica griglia visibile nell'ordine, non nel disegno.",
+      "hero": "https://impeccable.style/worlds/cards/crouwel-grid-specimen-hero.webp"
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "canon": true,
+  "canonCard": {
+    "label": "Lo standard della categoria",
+    "thesis": "Un gift finder come li fanno tutti, ma fatto benissimo.",
+    "palette": ["#ffffff", "#111827", "#e4572e"],
+    "materials": ["griglia pulita", "card arrotondate", "foto prodotto"],
+    "viewport": "Campo di ricerca centrale, card prodotto in griglia, pulsante arancio.",
+    "risk": "Indistinguibile dai concorrenti per definizione: niente riconoscibilità."
+  },
+  "steer": true
+}

@@ -4,7 +4,9 @@ import { type ConfigPubblica, leggiRisultatoPubblico, leggiSrc } from "../api";
 import { dataRoma } from "../formato";
 import { BannerInstagram } from "./BannerInstagram";
 import { Card } from "./Card";
+import { Etichetta } from "./Etichetta";
 import { Footer } from "./Footer";
+import { Icona } from "./Icona";
 import { Idee } from "./Idee";
 
 export function PaginaCondivisa({ id, config }: { id: string; config: ConfigPubblica }) {
@@ -15,30 +17,39 @@ export function PaginaCondivisa({ id, config }: { id: string; config: ConfigPubb
   }, [id]);
 
   return (
-    <main class="pagina">
-      <header class="logo">
-        cosa<span>regalo</span>
+    <main class="pagina pagina-lavoro">
+      <header class="testata">
+        <a class="marchio" href="/">
+          cosaregalo
+        </a>
+        <span class="testata-motto">consulenza per regali</span>
       </header>
       <BannerInstagram />
-      {r === "caricamento" && <p class="nota">Carico le idee…</p>}
-      {r === null && <p class="messaggio">Risultato non trovato: forse il link è incompleto.</p>}
-      {r && r !== "caricamento" && (
-        <section>
-          <h1>{r.titolo}</h1>
-          {r.capito.budgetMax && (
-            <div class="chips">
-              <span>≤ {r.capito.budgetMax} €</span>
-            </div>
-          )}
-          {r.scelte.map((s) => (
-            <Card key={s.asin} scelta={s} tag={config.affiliateTag} risultatoId={r.id} src={src} />
-          ))}
-          <Idee idee={r.idee} tag={config.affiliateTag} risultatoId={r.id} src={src} />
-          {r.scelte.length > 0 && <p class="messaggio">Prezzi del {dataRoma(r.creatoIl)}: controlla su Amazon quello attuale.</p>}
-        </section>
+      {r === "caricamento" && <p class="nota nota-attesa">Apro la preparazione…</p>}
+      {r === null && (
+        <p class="messaggio" role="status">
+          <Icona nome="avviso" />
+          Questa preparazione non esiste più o il link è incompleto.
+        </p>
       )}
-      <a class="btn" href="/">
-        Cerca un regalo per qualcun altro
+      {r && r !== "caricamento" && (
+        <>
+          <Etichetta capito={r.capito} titolo={r.titolo} />
+          <section class="esito" aria-label="Regali preparati">
+            {r.scelte.length > 0 ? (
+              <div class="rimedi">
+                {r.scelte.map((s, i) => (
+                  <Card key={s.asin} scelta={s} indice={i} tag={config.affiliateTag} risultatoId={r.id} src={src} />
+                ))}
+              </div>
+            ) : null}
+            <Idee idee={r.idee} tag={config.affiliateTag} risultatoId={r.id} src={src} />
+            {r.scelte.length > 0 ? <p class="nota">Prezzi del {dataRoma(r.creatoIl)}: su Amazon trovi quello di oggi.</p> : null}
+          </section>
+        </>
+      )}
+      <a class="pulsante pulsante-attivo pulsante-largo" href="/">
+        Prepara un regalo per qualcun altro <Icona nome="freccia" />
       </a>
       <Footer />
     </main>

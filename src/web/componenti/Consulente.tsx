@@ -6,17 +6,19 @@ import { avviaRicercaSicura } from "../ricerca";
 import { riduci, STATO_INIZIALE, type Messaggio } from "../stato";
 import { ottieniToken } from "../turnstile";
 import { BannerInstagram } from "./BannerInstagram";
-import { Card, CardScheletro } from "./Card";
+import { Card } from "./Card";
+import { Etichetta, Preparazioni } from "./Etichetta";
 import { Footer } from "./Footer";
+import { Icona } from "./Icona";
 import { Idee } from "./Idee";
 
-const ESEMPI = ["papà runner, 50 €", "amico segreto in ufficio, 15 €", "fidanzata che ama leggere, 30 €"];
+const ESEMPI = ["Mio papà, corre la maratona, 50 €", "Amico segreto in ufficio, 15 €", "La mia ragazza, ama leggere gialli, 30 €"];
 
 const TESTI_MESSAGGIO: Record<Messaggio, string> = {
-  non_capito: "🤔 Non ho capito per chi è il regalo. Prova così: “mio fratello, ama la montagna, 30 €”.",
-  troppe_richieste: "⏳ Hai fatto molte ricerche di fila, riprova tra un minuto.",
-  verifica_fallita: "🛡️ Verifica di sicurezza non riuscita. Ricarica la pagina e riprova.",
-  errore: "⚠️ Qualcosa è andato storto. Riprova.",
+  non_capito: "Non ho capito per chi è il regalo. Prova a scrivere così: “mio fratello, ama la montagna, 30 €”.",
+  troppe_richieste: "Hai preparato molti regali di fila. Riprova tra un minuto.",
+  verifica_fallita: "La verifica di sicurezza non è andata a buon fine. Ricarica la pagina e riprova.",
+  errore: "Qualcosa non ha funzionato durante la preparazione. Riprova.",
 };
 
 export function Consulente({ config }: { config: ConfigPubblica }) {
@@ -49,91 +51,131 @@ export function Consulente({ config }: { config: ConfigPubblica }) {
       return;
     }
     await navigator.clipboard?.writeText(url).catch(() => {});
-    setAvviso(perSe ? "Link copiato: incollalo dove vuoi e aprilo sul computer." : "Link copiato.");
+    setAvviso(perSe ? "Link copiato. Aprilo sul computer per continuare da lì." : "Link copiato.");
   }
 
   const inHome = stato.fase === "home";
+  const inCorso = stato.fase === "cerca";
   const capito = stato.capito;
   const primoProdotto = stato.scelte[0]?.prodotto;
 
   return (
-    <main class="pagina">
-      <header class="logo">
-        cosa<span>regalo</span>
+    <main class={`pagina ${inHome ? "pagina-home" : "pagina-lavoro"}`}>
+      <header class="testata">
+        <a class="marchio" href="/">
+          cosaregalo
+        </a>
+        <span class="testata-motto">consulenza per regali</span>
       </header>
       <BannerInstagram />
-      {inHome && <h1>Dimmi per chi è e quanto vuoi spendere. Ti dico cosa regalare.</h1>}
+
       <form
-        class={inHome ? "form" : "form compatto"}
+        class={`etichetta etichetta-modulo ${inHome ? "" : "etichetta-compatta"}`}
         onSubmit={(e) => {
           e.preventDefault();
           void avvia(testo, false);
         }}
       >
-        <textarea
-          value={testo}
-          maxLength={300}
-          rows={inHome ? 3 : 2}
-          placeholder="Es. mia mamma, ama il giardinaggio, 40 €"
-          onInput={(e) => setTesto((e.target as HTMLTextAreaElement).value)}
-        />
-        <button class="btn" type="submit" disabled={stato.fase === "cerca" || testo.trim().length < MIN_TESTO}>
-          {stato.fase === "cerca" ? "Sto cercando…" : "Trova il regalo 🎁"}
-        </button>
+        <div class="etichetta-cornice">
+          {inHome ? (
+            <>
+              <h1 class="etichetta-titolo">Tre regali su misura, scelti per una persona.</h1>
+              <p class="etichetta-guida">
+                <span>Per chi</span>
+                <span>Cosa ama</span>
+                <span>Fino a quanto</span>
+              </p>
+            </>
+          ) : null}
+          <label class="visualmente-nascosto" for="richiesta">
+            Per chi è il regalo, cosa ama e quanto vuoi spendere
+          </label>
+          <textarea
+            id="richiesta"
+            value={testo}
+            maxLength={300}
+            rows={inHome ? 3 : 2}
+            placeholder="Es. mia mamma, ama il giardinaggio, 40 €"
+            onInput={(e) => setTesto((e.target as HTMLTextAreaElement).value)}
+          />
+          <button class="pulsante pulsante-attivo" type="submit" disabled={inCorso || testo.trim().length < MIN_TESTO}>
+            {inCorso ? "In preparazione…" : inHome ? "Prepara i regali" : "Prepara di nuovo"}
+            {inCorso ? null : <Icona nome="freccia" />}
+          </button>
+        </div>
       </form>
-      <div ref={turnstileRef} />
+      <div ref={turnstileRef} class="turnstile" />
+
       {inHome && (
-        <div class="esempi">
-          <span>Oppure prova:</span>
-          {ESEMPI.map((es) => (
-            <button
-              key={es}
-              type="button"
-              onClick={() => {
-                setTesto(es);
-                void avvia(es, false);
-              }}
-            >
-              {es}
-            </button>
-          ))}
-        </div>
-      )}
-      {capito && (
-        <div class="chips">
-          {capito.destinatario && <span>👤 {capito.destinatario}</span>}
-          {capito.interessi.map((i) => (
-            <span key={i}>{i}</span>
-          ))}
-          {capito.budgetMax && <span>≤ {capito.budgetMax} €</span>}
-        </div>
-      )}
-      {stato.fase === "cerca" && capito && capito.ricerche.map((r) => <CardScheletro key={r} ricerca={r} />)}
-      {stato.messaggio && <p class="messaggio">{TESTI_MESSAGGIO[stato.messaggio]}</p>}
-      {stato.fase === "fatto" && stato.modalita && (
-        <section>
-          {stato.scelte.map((s) => (
-            <Card key={s.asin} scelta={s} tag={config.affiliateTag} risultatoId={stato.id} src={src} />
-          ))}
-          {stato.modalita === "completa" && stato.idee.length > 0 && <p class="messaggio">🔍 Ho trovato poco con questo budget: ecco altre idee.</p>}
-          <Idee idee={stato.idee} tag={config.affiliateTag} risultatoId={stato.id} src={src} />
-          {primoProdotto && <p class="nota">Prezzi rilevati alle {oraRoma(primoProdotto.rilevatoIl)}, possono cambiare.</p>}
-          <div class="azioni">
-            {stato.id && (
-              <>
-                <button class="btn2" type="button" onClick={() => void condividi(false)}>
-                  📤 Condividi
+        <section class="esempi" aria-label="Esempi">
+          <p class="esempi-titolo">Oppure parti da un esempio</p>
+          <ul>
+            {ESEMPI.map((es) => (
+              <li key={es}>
+                <button
+                  type="button"
+                  class="cartellino"
+                  onClick={() => {
+                    setTesto(es);
+                    void avvia(es, false);
+                  }}
+                >
+                  {es}
                 </button>
-                <button class="btn2" type="button" onClick={() => void condividi(true)}>
-                  💻 Mandalo a te
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {capito && <Etichetta capito={capito} />}
+      {inCorso && capito && <Preparazioni ricerche={capito.ricerche} />}
+      {inCorso && !capito && <p class="nota nota-attesa">Leggo la richiesta…</p>}
+
+      {stato.messaggio && (
+        <p class="messaggio" role="status">
+          <Icona nome="avviso" />
+          {TESTI_MESSAGGIO[stato.messaggio]}
+        </p>
+      )}
+
+      {stato.fase === "fatto" && stato.modalita && (
+        <section class="esito" aria-label="Regali preparati">
+          {stato.modalita === "leggera" ? (
+            <p class="nota nota-leggera">Ecco tre idee da completare su Amazon: scegli tu il modello che preferisci.</p>
+          ) : null}
+          {stato.scelte.length > 0 ? (
+            <div class="rimedi">
+              {stato.scelte.map((s, i) => (
+                <Card key={s.asin} scelta={s} indice={i} tag={config.affiliateTag} risultatoId={stato.id} src={src} />
+              ))}
+            </div>
+          ) : null}
+          {stato.modalita === "completa" && stato.idee.length > 0 ? (
+            <p class="nota">Con questo budget ho trovato meno prodotti del solito. Altre idee da cercare:</p>
+          ) : null}
+          <Idee idee={stato.idee} tag={config.affiliateTag} risultatoId={stato.id} src={src} />
+          {primoProdotto ? <p class="nota">Prezzi rilevati alle {oraRoma(primoProdotto.rilevatoIl)}, possono cambiare.</p> : null}
+          <div class="azioni">
+            {stato.id ? (
+              <>
+                <button class="pulsante pulsante-filetto" type="button" onClick={() => void condividi(false)}>
+                  <Icona nome="condividi" /> Condividi
+                </button>
+                <button class="pulsante pulsante-filetto" type="button" onClick={() => void condividi(true)}>
+                  <Icona nome="schermo" /> Mandalo a te
                 </button>
               </>
-            )}
-            <button class="btn2" type="button" onClick={() => void avvia(stato.testo, true)}>
-              🔁 Altre idee
+            ) : null}
+            <button class="pulsante pulsante-filetto" type="button" onClick={() => void avvia(stato.testo, true)}>
+              <Icona nome="rinnova" /> Altre idee
             </button>
           </div>
-          {avviso && <p class="nota">{avviso}</p>}
+          {avviso ? (
+            <p class="nota" role="status">
+              {avviso}
+            </p>
+          ) : null}
         </section>
       )}
       <Footer />
