@@ -43,7 +43,7 @@ export function Card({
               </>
             ) : null}
             <span class="voto">
-              ★ {p.stelle.toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+              <Icona nome="stella" class="icona icona-stella" /> {p.stelle.toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
               <span class="recensioni"> · {p.recensioni.toLocaleString("it-IT")} recensioni</span>
             </span>
           </p>
@@ -53,7 +53,7 @@ export function Card({
         <a class="pulsante pulsante-pieno" href={href} target="_blank" rel="noopener sponsored" onClick={() => inviaEvento({ tipo: "click", asin: p.asin, risultatoId, src })}>
           Vedi su Amazon <Icona nome="esterno" />
         </a>
-        <a class="pulsante pulsante-filetto" href={linkCarrello(p.asin, tag)} target="_blank" rel="noopener sponsored" onClick={() => inviaEvento({ tipo: "carrello", asin: p.asin, risultatoId, src })}>
+        <a class="azione-testo" href={linkCarrello(p.asin, tag)} target="_blank" rel="noopener sponsored" onClick={() => inviaEvento({ tipo: "carrello", asin: p.asin, risultatoId, src })}>
           <Icona nome="carrello" /> Aggiungi al carrello
         </a>
       </footer>

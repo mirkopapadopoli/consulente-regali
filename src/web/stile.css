@@ -102,9 +102,9 @@ a {
 }
 
 .testata-motto {
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font: 500 13px/1.2 var(--display);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
   color: var(--inchiostro-2);
 }
 
@@ -120,8 +120,8 @@ a {
 }
 
 .etichetta-cornice {
-  border: 1px solid var(--oro);
-  outline: 1px solid var(--verde);
+  border: 1px solid var(--verde);
+  outline: 1px solid var(--oro);
   outline-offset: -5px;
   padding: calc(var(--passo) * 3) calc(var(--passo) * 2.5);
 }
@@ -143,9 +143,9 @@ a {
   flex-wrap: wrap;
   gap: 6px 0;
   margin: 0 0 calc(var(--passo) * 1.5);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font: 500 13px/1.2 var(--display);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
   color: var(--inchiostro-2);
 }
 
@@ -184,8 +184,17 @@ a {
   margin-top: calc(var(--passo) * 2.5);
 }
 
+.etichetta.etichetta-compatta {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 .etichetta-compatta .etichetta-cornice {
-  padding: calc(var(--passo) * 1.5) calc(var(--passo) * 2);
+  border: 0;
+  outline: 0;
+  padding: 0;
 }
 
 .etichetta-compatta textarea {
@@ -276,9 +285,9 @@ a {
 
 .esempi-titolo {
   margin: 0 0 10px;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font: 500 13px/1.2 var(--display);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
   color: var(--inchiostro-2);
 }
 
@@ -345,9 +354,9 @@ a {
 }
 
 .campo dt {
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font: 500 13px/1.2 var(--display);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
   color: var(--inchiostro-2);
 }
 
@@ -403,9 +412,9 @@ a {
 .stato-segno {
   position: relative;
   padding-bottom: 4px;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 13px/1.2 var(--display);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
   color: var(--ambra);
 }
 
@@ -475,9 +484,9 @@ a {
 }
 
 .rimedio-segno {
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font: 500 13px/1.2 var(--display);
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
   color: var(--verde-medio);
 }
 
@@ -584,6 +593,31 @@ a {
   width: 100%;
 }
 
+.azione-testo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  font: 400 16px/1 var(--display);
+  color: var(--verde);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.azione-testo .icona {
+  width: 16px;
+  height: 16px;
+}
+
+.icona-stella {
+  width: 13px;
+  height: 13px;
+  margin-right: 2px;
+  vertical-align: -1px;
+  color: var(--oro);
+}
+
 /* ——— Idee da completare ——— */
 
 .idee {
@@ -595,9 +629,14 @@ a {
 
 .idea {
   display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
   gap: 12px;
   padding: 16px 4px;
   border-bottom: 1px solid var(--filetto);
+}
+
+.idea .pulsante {
+  grid-column: 2;
 }
 
 .idea-nome {
@@ -649,7 +688,8 @@ a {
 
 .azioni {
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
   margin-top: calc(var(--passo) * 3);
 }
 
@@ -660,6 +700,18 @@ a {
   border: 1px solid var(--filetto);
   background: var(--carta);
   font-size: 14px;
+}
+
+.azioni .pulsante {
+  min-height: 44px;
+  padding: 0 8px;
+  gap: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.azioni .pulsante .icona {
+  display: none;
 }
 
 /* ——— Piede ——— */
@@ -674,6 +726,7 @@ a {
 }
 
 .piede p {
+  max-width: 70ch;
   margin: 0 0 6px;
 }
 
@@ -714,7 +767,40 @@ a {
   }
 
   .esempi {
+    max-width: 900px;
     margin-top: calc(var(--passo) * 4);
+  }
+
+  .esempi ul {
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  .esempi-titolo {
+    text-align: center;
+  }
+
+  .cartellino {
+    padding: 8px 12px;
+  }
+
+  .azioni .pulsante {
+    padding: 0 20px;
+    font-size: 15px;
+  }
+
+  .azioni .pulsante .icona {
+    display: block;
+  }
+
+  .testata-motto,
+  .etichetta-guida,
+  .esempi-titolo,
+  .campo dt,
+  .stato-segno,
+  .rimedio-segno {
+    font-size: 14px;
+    font-weight: 600;
   }
 
   .rimedi {
@@ -740,12 +826,17 @@ a {
   }
 
   .idea {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 40px minmax(0, 1fr) auto;
     align-items: center;
+  }
+
+  .idea .pulsante {
+    grid-column: auto;
   }
 
   .azioni {
     grid-template-columns: repeat(3, max-content);
+    gap: 8px;
     justify-content: center;
   }
 }

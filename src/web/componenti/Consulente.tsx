@@ -1,7 +1,6 @@
 import { useReducer, useRef, useState } from "preact/hooks";
 import { MIN_TESTO } from "../../shared/testo";
 import { cerca, type ConfigPubblica, inviaEvento, leggiSrc } from "../api";
-import { oraRoma } from "../formato";
 import { avviaRicercaSicura } from "../ricerca";
 import { riduci, STATO_INIZIALE, type Messaggio } from "../stato";
 import { ottieniToken } from "../turnstile";
@@ -25,12 +24,19 @@ export function Consulente({ config }: { config: ConfigPubblica }) {
   const [stato, invia] = useReducer(riduci, STATO_INIZIALE);
   const [testo, setTesto] = useState("");
   const [avviso, setAvviso] = useState<string | null>(null);
+  const [troppoBreve, setTroppoBreve] = useState(false);
   const turnstileRef = useRef<HTMLDivElement>(null);
   const src = leggiSrc();
 
   async function avvia(t: string, altre: boolean) {
     const pulito = t.trim();
-    if (pulito.length < MIN_TESTO || stato.fase === "cerca") return;
+    if (stato.fase === "cerca") return;
+    if (pulito.length < MIN_TESTO) {
+      setTroppoBreve(true);
+      document.getElementById("richiesta")?.focus();
+      return;
+    }
+    setTroppoBreve(false);
     setAvviso(null);
     invia({ tipo: "avvia", testo: pulito, altre });
     await avviaRicercaSicura({
@@ -98,13 +104,21 @@ export function Consulente({ config }: { config: ConfigPubblica }) {
             placeholder="Es. mia mamma, ama il giardinaggio, 40 €"
             onInput={(e) => setTesto((e.target as HTMLTextAreaElement).value)}
           />
-          <button class="pulsante pulsante-attivo" type="submit" disabled={inCorso || testo.trim().length < MIN_TESTO}>
-            {inCorso ? "In preparazione…" : inHome ? "Prepara i regali" : "Prepara di nuovo"}
-            {inCorso ? null : <Icona nome="freccia" />}
-          </button>
+          {inCorso ? null : (
+            <button class="pulsante pulsante-attivo" type="submit">
+              {inHome ? "Prepara i regali" : "Prepara di nuovo"}
+              <Icona nome="freccia" />
+            </button>
+          )}
         </div>
       </form>
       <div ref={turnstileRef} class="turnstile" />
+      {troppoBreve ? (
+        <p class="messaggio" role="status">
+          <Icona nome="avviso" />
+          Scrivi per chi è il regalo, cosa ama e quanto vuoi spendere.
+        </p>
+      ) : null}
 
       {inHome && (
         <section class="esempi" aria-label="Esempi">
@@ -128,7 +142,7 @@ export function Consulente({ config }: { config: ConfigPubblica }) {
         </section>
       )}
 
-      {capito && <Etichetta capito={capito} />}
+      {capito && <Etichetta capito={capito} rilevatoIl={stato.fase === "fatto" ? primoProdotto?.rilevatoIl : undefined} />}
       {inCorso && capito && <Preparazioni ricerche={capito.ricerche} />}
       {inCorso && !capito && <p class="nota nota-attesa">Leggo la richiesta…</p>}
 
@@ -155,7 +169,6 @@ export function Consulente({ config }: { config: ConfigPubblica }) {
             <p class="nota">Con questo budget ho trovato meno prodotti del solito. Altre idee da cercare:</p>
           ) : null}
           <Idee idee={stato.idee} tag={config.affiliateTag} risultatoId={stato.id} src={src} />
-          {primoProdotto ? <p class="nota">Prezzi rilevati alle {oraRoma(primoProdotto.rilevatoIl)}, possono cambiare.</p> : null}
           <div class="azioni">
             {stato.id ? (
               <>

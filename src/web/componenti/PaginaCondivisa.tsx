@@ -1,7 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import type { RisultatoPubblico } from "../../shared/types";
 import { type ConfigPubblica, leggiRisultatoPubblico, leggiSrc } from "../api";
-import { dataRoma } from "../formato";
 import { BannerInstagram } from "./BannerInstagram";
 import { Card } from "./Card";
 import { Etichetta } from "./Etichetta";
@@ -34,7 +33,7 @@ export function PaginaCondivisa({ id, config }: { id: string; config: ConfigPubb
       )}
       {r && r !== "caricamento" && (
         <>
-          <Etichetta capito={r.capito} titolo={r.titolo} />
+          <Etichetta capito={r.capito} titolo={r.titolo} rilevatoIl={r.scelte[0]?.prodotto.rilevatoIl} />
           <section class="esito" aria-label="Regali preparati">
             {r.scelte.length > 0 ? (
               <div class="rimedi">
@@ -44,7 +43,7 @@ export function PaginaCondivisa({ id, config }: { id: string; config: ConfigPubb
               </div>
             ) : null}
             <Idee idee={r.idee} tag={config.affiliateTag} risultatoId={r.id} src={src} />
-            {r.scelte.length > 0 ? <p class="nota">Prezzi del {dataRoma(r.creatoIl)}: su Amazon trovi quello di oggi.</p> : null}
+            {r.scelte.length > 0 ? <p class="nota">Su Amazon trovi il prezzo di oggi.</p> : null}
           </section>
         </>
       )}

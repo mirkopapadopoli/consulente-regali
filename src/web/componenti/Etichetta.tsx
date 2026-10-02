@@ -1,14 +1,16 @@
 import type { Capito } from "../../shared/types";
+import { dataRoma, oraRoma } from "../formato";
 
 export const NUMERALI = ["I", "II", "III"];
 
 /** L'etichetta compilata: i campi si scrivono uno alla volta mentre il consulente prepara. */
-export function Etichetta({ capito, titolo }: { capito: Capito; titolo?: string }) {
+export function Etichetta({ capito, titolo, rilevatoIl }: { capito: Capito; titolo?: string; rilevatoIl?: string }) {
   const righe: [string, string][] = [];
   if (capito.destinatario) righe.push(["Per", capito.destinatario]);
   if (capito.interessi.length) righe.push(["Ama", capito.interessi.join(", ")]);
   if (capito.budgetMax) righe.push(["Fino a", `${capito.budgetMax.toLocaleString("it-IT")} €`]);
   if (capito.occasione) righe.push(["Occasione", capito.occasione]);
+  if (rilevatoIl) righe.push(["Prezzi del", `${dataRoma(rilevatoIl)}, ore ${oraRoma(rilevatoIl)}`]);
   return (
     <section class="etichetta etichetta-compilata" aria-label="Cosa ho capito">
       <div class="etichetta-cornice">

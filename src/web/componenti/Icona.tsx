@@ -8,6 +8,7 @@ const TRACCIATI = {
   rinnova: "M15.5 8A6 6 0 1 0 16 11M15.5 3.5V8H11",
   lente: "M8.75 14.5a5.75 5.75 0 1 0 0-11.5 5.75 5.75 0 0 0 0 11.5ZM13 13l4 4",
   avviso: "M10 6.5v4.5M10 14h.01M10 2.5 18 17H2Z",
+  stella: "M10 2.75l2.2 4.6 5.05.65-3.7 3.5.95 5-4.5-2.45-4.5 2.45.95-5-3.7-3.5 5.05-.65Z",
 } as const;
 
 export type NomeIcona = keyof typeof TRACCIATI;
