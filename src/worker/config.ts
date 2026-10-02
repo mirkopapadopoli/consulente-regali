@@ -9,6 +9,7 @@ export interface Config {
   minStelle: number;
   minRecensioni: number;
   quotaVisitatore: number;
+  quotaIp: number;
   tettoGiornaliero: number;
   affiliateTag: string;
   turnstileSiteKey: string;
@@ -35,6 +36,7 @@ export function loadConfig(env: Partial<Env>): Config {
     minStelle: num(env.MIN_STELLE, 4),
     minRecensioni: num(env.MIN_RECENSIONI, 20),
     quotaVisitatore: num(env.QUOTA_VISITATORE, 5),
+    quotaIp: num(env.QUOTA_IP, 15),
     tettoGiornaliero: num(env.TETTO_GIORNALIERO, 150),
     affiliateTag: str(env.AFFILIATE_TAG, "mirkopapadopo-21"),
     turnstileSiteKey: str(env.TURNSTILE_SITE_KEY, ""),

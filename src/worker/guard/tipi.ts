@@ -9,6 +9,8 @@ export interface ContestoGuard {
   db: D1Database;
   rateLimiter: RateLimiter;
   ip: string;
+  /** hash(IP + sale + giorno): conta le ricerche per IP senza salvare l'IP. */
+  ipHash: string;
   visitatore: string;
   turnstileToken: string;
   turnstileSecret: string;

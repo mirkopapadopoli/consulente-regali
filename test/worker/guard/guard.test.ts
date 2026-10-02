@@ -5,7 +5,7 @@ import type { ContestoGuard } from "../../../src/worker/guard/tipi";
 import { checkAccesso, checkSpesa } from "../../../src/worker/guard/index";
 import { verificaTurnstile } from "../../../src/worker/guard/turnstile";
 import { creaAvvisoTelegram } from "../../../src/worker/guard/avviso";
-import { idVisitatore } from "../../../src/worker/guard/visitatore";
+import { idIp, idVisitatore } from "../../../src/worker/guard/visitatore";
 
 const ORA = new Date("2026-10-02T10:00:00.000Z");
 
@@ -18,10 +18,11 @@ function turnstileFetch(success: boolean | "errore") {
 
 function ctx(over: Partial<ContestoGuard> = {}): ContestoGuard {
   return {
-    cfg: { ...loadConfig({}), quotaVisitatore: 2, tettoGiornaliero: 5 },
+    cfg: { ...loadConfig({}), quotaVisitatore: 2, quotaIp: 100, tettoGiornaliero: 5 },
     db: testEnv().DB,
     rateLimiter: { limit: async () => ({ success: true }) },
     ip: "1.2.3.4",
+    ipHash: "ip-default",
     visitatore: "v1",
     turnstileToken: "tok",
     turnstileSecret: "sec",
@@ -64,10 +65,11 @@ describe("checkAccesso", () => {
     expect(await checkAccesso(ctx({ fetch: turnstileFetch(false) }))).toEqual({ blocca: "verifica_fallita" });
     expect(await checkAccesso(ctx({ fetch: turnstileFetch("errore") }))).toBe("leggera");
   });
-  it("registra i blocchi negli eventi", async () => {
+  it("i blocchi d'accesso non scrivono su D1 (una raffica non deve consumare le scritture)", async () => {
     await checkAccesso(ctx({ fetch: turnstileFetch(false), visitatore: "v-evento" }));
-    const r = await testEnv().DB.prepare("SELECT tipo, difesa, dettaglio FROM eventi WHERE difesa = 'turnstile'").first();
-    expect(r).toEqual({ tipo: "blocco", difesa: "turnstile", dettaglio: "verifica_fallita" });
+    await checkAccesso(ctx({ rateLimiter: { limit: async () => ({ success: false }) } }));
+    const r = await testEnv().DB.prepare("SELECT COUNT(*) AS n FROM eventi WHERE difesa IN ('turnstile','velocita')").first<{ n: number }>();
+    expect(r?.n).toBe(0);
   });
 });
 
@@ -87,6 +89,22 @@ describe("checkSpesa", () => {
     expect(avvisa).toHaveBeenCalledTimes(1);
     expect(avvisa.mock.calls[0][0]).toContain("4/5");
   });
+  it("quota per IP: cambiare cookie (nuovo visitatore) non aggira il limite giornaliero dell'IP", async () => {
+    const quando = () => new Date("2026-10-06T10:00:00.000Z");
+    const cfg = { ...loadConfig({}), quotaVisitatore: 5, quotaIp: 3, tettoGiornaliero: 1000 };
+    const esiti = [];
+    for (let i = 0; i < 4; i++) esiti.push(await checkSpesa(ctx({ cfg, ipHash: "ip-bot", visitatore: `cookie-nuovo-${i}`, now: quando })));
+    expect(esiti).toEqual(["procedi", "procedi", "procedi", "leggera"]);
+    expect(await checkSpesa(ctx({ cfg, ipHash: "ip-altro", visitatore: "x", now: quando }))).toBe("procedi");
+  });
+
+  it("registra in eventi i passaggi in leggera dovuti alla spesa", async () => {
+    const quando = () => new Date("2026-10-05T10:00:00.000Z");
+    for (let i = 0; i < 3; i++) await checkSpesa(ctx({ visitatore: "log1", now: quando }));
+    const r = await testEnv().DB.prepare("SELECT tipo, difesa, dettaglio FROM eventi WHERE difesa = 'quota_visitatore'").first();
+    expect(r).toEqual({ tipo: "blocco", difesa: "quota_visitatore", dettaglio: "leggera" });
+  });
+
   it("se D1 non risponde procede (i tetti nei pannelli restano la garanzia)", async () => {
     const dbRotto = { prepare: () => { throw new Error("D1 giù"); } } as unknown as D1Database;
     expect(await checkSpesa(ctx({ db: dbRotto }))).toBe("procedi");
@@ -100,6 +118,12 @@ describe("avviso e visitatore", () => {
     expect(String(f.mock.calls[0][0])).toBe("https://api.telegram.org/botTOKEN/sendMessage");
     expect(JSON.parse(String((f.mock.calls[0][1] as RequestInit).body))).toEqual({ chat_id: "42", text: "ciao" });
     await expect(creaAvvisoTelegram(undefined, undefined, f)("x")).resolves.toBeUndefined();
+  });
+  it("idIp non contiene l'IP, dipende dal sale e cambia con il giorno", async () => {
+    const a = await idIp("1.2.3.4", "s", ORA);
+    expect(a).not.toContain("1.2.3.4");
+    expect(await idIp("1.2.3.4", "altro", ORA)).not.toBe(a);
+    expect(await idIp("1.2.3.4", "s", new Date("2026-10-03T10:00:00Z"))).not.toBe(a);
   });
   it("idVisitatore cambia con il giorno e non contiene l'IP", async () => {
     const a = await idVisitatore("1.2.3.4", "c1", "s", ORA);

@@ -16,7 +16,8 @@
     }
   ],
   "ratelimits": [
-    { "name": "RATE_LIMITER", "namespace_id": "1001", "simple": { "limit": 3, "period": 60 } }
+    { "name": "RATE_LIMITER", "namespace_id": "1001", "simple": { "limit": 3, "period": 60 } },
+    { "name": "EVENTI_LIMITER", "namespace_id": "1002", "simple": { "limit": 20, "period": 60 } }
   ],
   "triggers": { "crons": ["0 3 * * *"] },
   "vars": {
@@ -28,6 +29,7 @@
     "MIN_STELLE": "4.0",
     "MIN_RECENSIONI": "20",
     "QUOTA_VISITATORE": "5",
+    "QUOTA_IP": "15",
     "TETTO_GIORNALIERO": "150",
     "AFFILIATE_TAG": "mirkopapadopo-21",
     "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"

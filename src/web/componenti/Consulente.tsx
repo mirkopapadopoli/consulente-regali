@@ -2,6 +2,7 @@ import { useReducer, useRef, useState } from "preact/hooks";
 import { MIN_TESTO } from "../../shared/testo";
 import { cerca, type ConfigPubblica, inviaEvento, leggiSrc } from "../api";
 import { oraRoma } from "../formato";
+import { avviaRicercaSicura } from "../ricerca";
 import { riduci, STATO_INIZIALE, type Messaggio } from "../stato";
 import { ottieniToken } from "../turnstile";
 import { BannerInstagram } from "./BannerInstagram";
@@ -30,11 +31,13 @@ export function Consulente({ config }: { config: ConfigPubblica }) {
     if (pulito.length < MIN_TESTO || stato.fase === "cerca") return;
     setAvviso(null);
     invia({ tipo: "avvia", testo: pulito, altre });
-    const token = await ottieniToken(turnstileRef.current!, config.turnstileSiteKey);
-    await cerca({ testo: pulito, turnstileToken: token, src, escludi: altre ? stato.mostrati : [] }, (evento) => invia({ tipo: "evento", evento })).catch(() =>
-      invia({ tipo: "evento", evento: { tipo: "errore" } }),
-    );
-    invia({ tipo: "fine" });
+    await avviaRicercaSicura({
+      ottieniToken: () => ottieniToken(turnstileRef.current!, config.turnstileSiteKey),
+      cerca: (token) =>
+        cerca({ testo: pulito, turnstileToken: token, src, escludi: altre ? stato.mostrati : [] }, (evento) => invia({ tipo: "evento", evento })),
+      errore: () => invia({ tipo: "evento", evento: { tipo: "errore" } }),
+      fine: () => invia({ tipo: "fine" }),
+    });
   }
 
   async function condividi(perSe: boolean) {

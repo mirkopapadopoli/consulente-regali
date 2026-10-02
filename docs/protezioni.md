@@ -6,10 +6,15 @@ Apify costa ~$0,075 per ricerca completa; l'AI ~$0,0004. Le difese limitano Apif
 |---|---|---|---|---|
 | 1 | Turnstile (token monouso) | `guard/turnstile.ts` | — | widget nel pannello Turnstile; `TURNSTILE_SITE_KEY` (var) e `TURNSTILE_SECRET` (segreto) |
 | 2 | Limite di velocità per IP | `guard/velocita.ts` | 3 ricerche / 60 s | `ratelimits` in `wrangler.jsonc` (richiede deploy) |
+| 3a | Quota per IP | `guard/quota.ts` | 15 ricerche complete / giorno (hash dell'IP, non salvato in chiaro) | var `QUOTA_IP` |
 | 3 | Quota per visitatore | `guard/quota.ts` | 5 ricerche complete / giorno | var `QUOTA_VISITATORE` |
 | 4 | Cache richieste e ricerche | `store/cache.ts` | 24 h | costante `TTL_CACHE_MS` |
 | 5 | Filtro AI "è un regalo?" | `ai/capire.ts` | — | prompt `PROMPT_CAPIRE` |
 | 6 | Tetto giornaliero globale | `guard/quota.ts` | 150 ricerche complete / giorno | var `TETTO_GIORNALIERO` |
+
+La quota per IP impedisce di aggirare la quota per visitatore cancellando il cookie.
+
+`POST /api/evento` (click, carrello, condivisioni) ha un limite proprio: 20 richieste / 60 s per IP (binding `EVENTI_LIMITER`), oltre → 429. I blocchi di velocità e Turnstile finiscono solo nei log, non in D1: una raffica di bot non può esaurire le scritture D1 gratuite (100.000/giorno) e spegnere così quote e tetto.
 
 Ordine: il limite di velocità viene prima di Turnstile (una raffica viene respinta senza chiamare siteverify); quota e tetto girano solo subito prima di Apify, così le risposte dalla cache non consumano quota.
 

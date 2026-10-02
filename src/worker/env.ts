@@ -5,6 +5,7 @@ export interface RateLimiter {
 export interface Env {
   DB: D1Database;
   RATE_LIMITER: RateLimiter;
+  EVENTI_LIMITER: RateLimiter;
   // vars (stringhe da wrangler.jsonc, modificabili dal pannello)
   AI_MODEL?: string;
   AI_TIMEOUT_MS?: string;
@@ -14,6 +15,7 @@ export interface Env {
   MIN_STELLE?: string;
   MIN_RECENSIONI?: string;
   QUOTA_VISITATORE?: string;
+  QUOTA_IP?: string;
   TETTO_GIORNALIERO?: string;
   AFFILIATE_TAG?: string;
   TURNSTILE_SITE_KEY?: string;

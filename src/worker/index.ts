@@ -12,7 +12,7 @@ import { eseguiRicerca } from "./flusso";
 import { creaAvvisoTelegram } from "./guard/avviso";
 import { checkAccesso, checkSpesa } from "./guard/index";
 import type { ContestoGuard } from "./guard/tipi";
-import { idVisitatore } from "./guard/visitatore";
+import { idIp, idVisitatore } from "./guard/visitatore";
 import { ApifySource } from "./products/apify";
 import { registraEvento } from "./store/eventi";
 import { pulisci } from "./store/pulizia";
@@ -64,6 +64,7 @@ app.post("/api/cerca", async (c) => {
     db: c.env.DB,
     rateLimiter: c.env.RATE_LIMITER,
     ip,
+    ipHash: await idIp(ip, c.env.VISITOR_SALT, now()),
     visitatore: await idVisitatore(ip, cookieId, c.env.VISITOR_SALT, now()),
     turnstileToken,
     turnstileSecret: c.env.TURNSTILE_SECRET,
@@ -106,6 +107,8 @@ app.get("/api/risultati/:id", async (c) => {
 });
 
 app.post("/api/evento", async (c) => {
+  const { success } = await c.env.EVENTI_LIMITER.limit({ key: c.req.header("cf-connecting-ip") || "sconosciuto" });
+  if (!success) return c.json({ errore: "troppe_richieste" }, 429);
   let body: Record<string, unknown>;
   try {
     body = JSON.parse(await c.req.text()) as Record<string, unknown>;

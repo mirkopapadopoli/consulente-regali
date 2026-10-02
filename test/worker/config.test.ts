@@ -13,6 +13,7 @@ describe("loadConfig", () => {
       minStelle: 4,
       minRecensioni: 20,
       quotaVisitatore: 5,
+      quotaIp: 15,
       tettoGiornaliero: 150,
       affiliateTag: "mirkopapadopo-21",
       budgetDefault: 100,

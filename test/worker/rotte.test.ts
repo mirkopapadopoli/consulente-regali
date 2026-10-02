@@ -102,6 +102,20 @@ describe("POST /api/evento", () => {
     expect(r).toEqual({ tipo: "click", asin: "B0D9K2YV5Q", src: "bio" });
   });
 
+  it("limita gli eventi per IP: una raffica riceve 429 e non scrive su D1", async () => {
+    const stati: number[] = [];
+    for (let i = 0; i < 25; i++) {
+      const res = await exports.default.fetch("http://localhost/api/evento", {
+        method: "POST",
+        headers: { "cf-connecting-ip": "203.0.113.7" },
+        body: JSON.stringify({ tipo: "condivisione" }),
+      });
+      stati.push(res.status);
+    }
+    expect(stati.filter((s) => s === 204)).toHaveLength(20);
+    expect(stati.slice(20).every((s) => s === 429)).toBe(true);
+  });
+
   it("rifiuta tipi non ammessi, ASIN malformati e body non JSON", async () => {
     for (const body of [JSON.stringify({ tipo: "blocco" }), JSON.stringify({ tipo: "click", asin: "x" }), "non json"]) {
       const res = await exports.default.fetch("http://localhost/api/evento", { method: "POST", body });
