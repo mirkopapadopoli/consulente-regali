@@ -29,7 +29,7 @@ function str(v: string | undefined, predefinito: string): string {
 export function loadConfig(env: Partial<Env>): Config {
   return {
     aiModel: str(env.AI_MODEL, "deepseek/deepseek-v4.1-flash"),
-    aiTimeoutMs: num(env.AI_TIMEOUT_MS, 6000),
+    aiTimeoutMs: num(env.AI_TIMEOUT_MS, 10000),
     apifyActor: str(env.APIFY_ACTOR, "junglee~amazon-crawler"),
     apifyPerRicerca: num(env.APIFY_RISULTATI_PER_RICERCA, 5),
     apifyTimeoutMs: num(env.APIFY_TIMEOUT_MS, 20000),

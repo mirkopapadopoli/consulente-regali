@@ -6,7 +6,7 @@ describe("loadConfig", () => {
     const c = loadConfig({});
     expect(c).toMatchObject({
       aiModel: "deepseek/deepseek-v4.1-flash",
-      aiTimeoutMs: 6000,
+      aiTimeoutMs: 10000,
       apifyActor: "junglee~amazon-crawler",
       apifyPerRicerca: 5,
       apifyTimeoutMs: 20000,

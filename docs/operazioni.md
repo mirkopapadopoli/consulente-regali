@@ -24,7 +24,7 @@ Vedi il piano `docs/superpowers/plans/2026-10-02-consulente-regali-mvp.md`, Task
 
 ## Timeout AI
 
-`AI_TIMEOUT_MS` (default 6000) vale per ciascuna chiamata OpenRouter. Se scade durante "scegli", le card compaiono comunque ma senza il perché (scelta di riserva). Nei test reali del 2026-10-02 è successo almeno una volta: se capita spesso, alzarlo a 9000–10000 dal pannello.
+`AI_TIMEOUT_MS` (default 10000) vale per ciascuna chiamata OpenRouter. Se scade durante "scegli", le card compaiono comunque ma senza il perché (scelta di riserva). Era 6000: alzato a 10000 il 2026-10-02 perché nei test reali DeepSeek V4.1 Flash lo superava a volte. Si cambia dal pannello senza deploy.
 
 ## Se arriva l'avviso dell'80%
 

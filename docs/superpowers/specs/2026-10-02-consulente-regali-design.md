@@ -138,7 +138,7 @@ Niente account, login o banner cookie: un solo cookie tecnico (identificativo an
 
 - Input: testo dell'utente ripulito (URL ed email rimossi, max 300 caratteri).
 - Output: `Capito` validato. JSON non valido → 1 nuovo tentativo → evento `errore`.
-- Timeout 6 s per chiamata.
+- Timeout 10 s per chiamata.
 - `regalo: false` per testi vuoti, casuali, fuori tema o con istruzioni al modello ("ignora le istruzioni…") → `non_capito`.
 - `budgetMax` assente → 100 €.
 
@@ -163,7 +163,7 @@ Un prodotto entra tra i candidati solo se:
 
 - Input: testo dell'utente + candidati `{asin, titolo, prezzo, stelle, recensioni}`.
 - Output: 3 `Scelta` con ASIN distinti presenti tra i candidati, `perche` non vuoto, ≤ 140 caratteri (troncato a parola se più lungo).
-- Errore, timeout (6 s), JSON non valido o ASIN inventati → **fallback deterministico**: i 3 candidati con
+- Errore, timeout (10 s), JSON non valido o ASIN inventati → **fallback deterministico**: i 3 candidati con
   punteggio `stelle × log10(recensioni + 1)` più alto, provenienti preferibilmente da ricerche diverse, con
   `perche` = null (la card mostra solo i dati).
 
@@ -281,7 +281,7 @@ Cron giornaliero: cancella `eventi` più vecchi di 90 giorni, cache scadute, `co
 | Variabile | Default |
 |---|---|
 | `AI_MODEL` | `deepseek/deepseek-v4.1-flash` |
-| `AI_TIMEOUT_MS` | 6000 |
+| `AI_TIMEOUT_MS` | 10000 |
 | `APIFY_ACTOR` | `junglee~amazon-crawler` |
 | `APIFY_RISULTATI_PER_RICERCA` | 5 |
 | `APIFY_TIMEOUT_MS` | 20000 |
