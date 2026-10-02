@@ -19,3 +19,8 @@
 ## Piani
 
 - [`superpowers/plans/2026-10-02-consulente-regali-mvp.md`](superpowers/plans/2026-10-02-consulente-regali-mvp.md) — piano di implementazione MVP
+
+## Design
+
+- [`../PRODUCT.md`](../PRODUCT.md) — verità di prodotto per il design: utenti, voce, impegni di brand (2026-10-02)
+- [`../DESIGN.md`](../DESIGN.md) — sistema visivo "Officina": palette, tipografia, componenti, movimento, regole (token in `.impeccable/design.json`)
