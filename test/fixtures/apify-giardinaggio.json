@@ -1,0 +1,8 @@
+[
+  { "asin": "B0D9K2YV5Q", "title": "Kynup Set da Giardinaggio 9 Pezzi, Attrezzi da Giardino in Acciaio Inox", "price": { "value": 29.99, "currency": "€" }, "getPriceBeforeDiscount": null, "stars": 4.8, "reviewsCount": 94, "imageUrl": "https://m.media-amazon.com/images/I/71kynup.jpg" },
+  { "asin": "B0C1SAWANS", "title": "SAWANS Guanti da giardinaggio lunghi per donna", "price": { "value": 12.99, "currency": "€" }, "getPriceBeforeDiscount": { "value": 16.99, "currency": "€" }, "stars": 4.4, "reviewsCount": 512, "imageUrl": "https://m.media-amazon.com/images/I/61sawans.jpg" },
+  { "asin": "B0CULTIVEA", "title": "CULTIVEA Kit Zen Bonsai", "price": { "value": 1597122.85, "currency": "€" }, "getPriceBeforeDiscount": { "value": 1228517.9, "currency": "€" }, "stars": 3.8, "reviewsCount": 5326, "imageUrl": "https://m.media-amazon.com/images/I/61bonsai.jpg" },
+  { "asin": "B0NOPRICE1", "title": "Prodotto senza prezzo", "price": null, "stars": 4.5, "reviewsCount": 30, "imageUrl": null },
+  { "asin": "not-an-asin", "title": "ASIN malformato", "price": { "value": 10 }, "stars": 4.5, "reviewsCount": 30 },
+  { "asin": "B0NOSTARS1", "title": "Prodotto senza voto", "price": { "value": 9.5 }, "imageUrl": null }
+]
