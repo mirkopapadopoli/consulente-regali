@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "deploy": "vite build && wrangler deploy"
+    "deploy": "vite build && wrangler deploy",
+    "db:migrate:local": "wrangler d1 migrations apply consulente-regali --local"
   },
   "keywords": [],
   "author": "",

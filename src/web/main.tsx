@@ -1,3 +1,5 @@
 import { render } from "preact";
+import { App } from "./App";
+import "./stile.css";
 
-render(<main>cosaregalo</main>, document.getElementById("app")!);
+render(<App />, document.getElementById("app")!);

@@ -42,6 +42,12 @@ export async function chatJson(o: OpzioniChat, system: string, user: string): Pr
     throw new ErroreAI(`rete o timeout: ${String(e)}`);
   }
   if (!res.ok) throw new ErroreAI(`HTTP ${res.status}`);
-  const dati = (await res.json()) as { choices?: { message?: { content?: string } }[] };
+  let dati: { choices?: { message?: { content?: string } }[] };
+  try {
+    // Il timeout può scattare anche mentre si legge il corpo, non solo durante fetch().
+    dati = (await res.json()) as typeof dati;
+  } catch (e) {
+    throw new ErroreAI(`lettura risposta fallita: ${String(e)}`);
+  }
   return estraiJson(dati.choices?.[0]?.message?.content ?? "");
 }

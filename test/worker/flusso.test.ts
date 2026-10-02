@@ -137,6 +137,15 @@ describe("eseguiRicerca", () => {
     expect(ris.scelte.map((s) => s.asin)).toEqual(["A000000003", "A000000004"]);
   });
 
+  it("errore imprevisto in scegli → scelta di riserva, mai pagina senza risultati", async () => {
+    const d = deps({ scegli: vi.fn(async () => { throw new Error("imprevisto"); }) });
+    const ev = await esegui(richiesta(), d);
+    expect(tipi(ev)).toEqual(["capito", "risultati:completa", "salvato"]);
+    const ris = ev[1] as Extract<EventoSSE, { tipo: "risultati"; modalita: "completa" }>;
+    expect(ris.scelte).toHaveLength(3);
+    expect(ris.scelte.every((s) => s.perche === null)).toBe(true);
+  });
+
   it("D1 non disponibile → risultati comunque, senza evento salvato", async () => {
     const dbRotto = { prepare: () => { throw new Error("D1 giù"); }, batch: () => { throw new Error("D1 giù"); } } as unknown as D1Database;
     expect(tipi(await esegui(richiesta(), deps({ db: dbRotto })))).toEqual(["capito", "risultati:completa"]);

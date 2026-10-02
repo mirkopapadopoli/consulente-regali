@@ -2,6 +2,7 @@ import { normalizza, pulisciTesto, sha256Hex } from "../shared/testo";
 import type { Candidato, Capito, EventoSSE, Idea, Modalita, Prodotto, ProductSource, Scelta, SceltaConProdotto } from "../shared/types";
 import type { Config } from "./config";
 import type { Esito } from "./guard/tipi";
+import { fallbackScelte } from "./ai/scegli";
 import { filtraCandidati } from "./products/filtri";
 import { chiaveRicerca, leggiCacheRicerca, leggiCacheRichiesta, scriviCacheRicerca, scriviCacheRichiesta } from "./store/cache";
 import { registraEvento } from "./store/eventi";
@@ -109,7 +110,13 @@ export async function eseguiRicerca(req: RichiestaRicerca, d: DipendenzeFlusso, 
   );
   if (candidati.length === 0) return leggera("nessun_prodotto");
 
-  const { scelte } = await d.scegli(testo, candidati);
+  let scelte: Scelta[];
+  try {
+    ({ scelte } = await d.scegli(testo, candidati));
+  } catch (e) {
+    console.error("scegli fallito in modo imprevisto", e);
+    scelte = fallbackScelte(candidati, Math.min(3, candidati.length));
+  }
   const perAsin = new Map(candidati.map((c) => [c.asin, c]));
   const sceltePiene: SceltaConProdotto[] = scelte.map((s) => ({ ...s, prodotto: senzaRicerca(perAsin.get(s.asin)!) }));
   const ricercheUsate = new Set(scelte.map((s) => perAsin.get(s.asin)!.ricerca));

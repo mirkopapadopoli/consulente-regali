@@ -29,6 +29,22 @@ describe("chatJson", () => {
   });
 });
 
+describe("chatJson: errori durante la lettura del corpo", () => {
+  it("un timeout mentre si legge la risposta diventa ErroreAI", async () => {
+    const corpoInterrotto = new ReadableStream({
+      start(c) {
+        c.error(new DOMException("The operation was aborted due to timeout", "TimeoutError"));
+      },
+    });
+    const f = vi.fn(async (_i: RequestInfo | URL, _init?: RequestInit) => new Response(corpoInterrotto, { status: 200 }));
+    await expect(chatJson({ ...base, fetch: f }, "s", "u")).rejects.toBeInstanceOf(ErroreAI);
+  });
+  it("una risposta HTTP 200 non JSON diventa ErroreAI", async () => {
+    const f = vi.fn(async (_i: RequestInfo | URL, _init?: RequestInit) => new Response("<html>gateway</html>", { status: 200 }));
+    await expect(chatJson({ ...base, fetch: f }, "s", "u")).rejects.toBeInstanceOf(ErroreAI);
+  });
+});
+
 describe("estraiJson", () => {
   it("accetta JSON racchiuso in blocchi ```json", () => {
     expect(estraiJson('```json\n{"a":1}\n```')).toEqual({ a: 1 });
