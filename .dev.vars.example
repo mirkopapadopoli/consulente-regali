@@ -1,0 +1,8 @@
+# Copiare in .dev.vars (ignorato da git) e riempire.
+APIFY_TOKEN=apify_api_...
+OPENROUTER_API_KEY=sk-or-v1-...
+# Chiave di test Turnstile che passa sempre (sostituire in produzione):
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+VISITOR_SALT=una-stringa-casuale-lunga
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=

@@ -1,0 +1,36 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "consulente-regali",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-08-20",
+  "assets": {
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "consulente-regali",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "ratelimits": [
+    { "name": "RATE_LIMITER", "namespace_id": "1001", "simple": { "limit": 3, "period": 60 } }
+  ],
+  "triggers": { "crons": ["0 3 * * *"] },
+  "vars": {
+    "AI_MODEL": "deepseek/deepseek-v4.1-flash",
+    "AI_TIMEOUT_MS": "6000",
+    "APIFY_ACTOR": "junglee~amazon-crawler",
+    "APIFY_RISULTATI_PER_RICERCA": "5",
+    "APIFY_TIMEOUT_MS": "20000",
+    "MIN_STELLE": "4.0",
+    "MIN_RECENSIONI": "20",
+    "QUOTA_VISITATORE": "5",
+    "TETTO_GIORNALIERO": "150",
+    "AFFILIATE_TAG": "mirkopapadopo-21",
+    "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
+  },
+  "observability": { "enabled": true }
+}
