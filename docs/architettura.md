@@ -10,7 +10,7 @@ Un solo Cloudflare Worker (`src/worker/index.ts`, Hono) serve l'API e la pagina 
 4. `guard.checkSpesa` — quota visitatore e tetto giornaliero, solo se almeno una ricerca non è in cache.
 5. `products/apify.ts` — 3 ricerche Apify in parallelo, cache 24 h per ricerca.
 6. `products/filtri.ts` — budget, voto ≥ `MIN_STELLE`, recensioni ≥ `MIN_RECENSIONI`, prezzi assurdi, duplicati.
-7. `ai/scegli.ts` — 3 prodotti + perché; scelta di riserva (voto × recensioni, senza perché) se l'AI sbaglia, va in timeout o fallisce in qualsiasi modo.
+7. `ai/scegli.ts` — 3 prodotti + perché; scelta di riserva (voto × recensioni, senza perché) se l'AI sbaglia, va in timeout o fallisce in qualsiasi modo. Il perché è chiesto in parole (`MAX_PAROLE` = 18, ~110 caratteri) perché il modello rispetta male i limiti in caratteri: con "massimo 140 caratteri" metà delle frasi in produzione usciva troncata. `tronca()` (tetto 200) è solo una rete di sicurezza e, quando può, chiude all'ultima frase completa invece di mettere `…` (2026-10-03).
 8. `store/risultati.ts` — salvataggio con id breve → pagina `/r/<id>`.
 
 Orchestrazione: `src/worker/flusso.ts`. Eventi SSE: `capito`, `non_capito`, `risultati` (completa/leggera), `salvato`, `bloccato`, `errore` (`src/shared/types.ts`).

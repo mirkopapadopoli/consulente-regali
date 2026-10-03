@@ -14,6 +14,13 @@ describe("tronca", () => {
     expect(t.length).toBeLessThanOrEqual(MAX_PERCHE);
     expect(t.endsWith("…")).toBe(true);
   });
+  it("se può, chiude all'ultima frase completa invece di mettere i puntini", () => {
+    const prima = "Perfetta per le uscite al parco con le amiche dopo il lavoro, leggera e facile da portare.";
+    const t = tronca(`${prima} ${"poi continua ancora ".repeat(10)}`);
+    expect(t).toBe(prima);
+    expect(tronca(`Ideale per i suoi pomeriggi all'aperto con le amiche del parco: ${"parola ".repeat(30)}`))
+      .toBe("Ideale per i suoi pomeriggi all'aperto con le amiche del parco.");
+  });
 });
 
 describe("validaScelte", () => {
