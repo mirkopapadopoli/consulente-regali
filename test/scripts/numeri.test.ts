@@ -32,6 +32,13 @@ describe("riepilogo", () => {
     expect(r[2]).toMatchObject({ ricerche: 14, click: 7, carrello: 1, condivisioni: 2 });
   });
 
+  it("visite per canale e ricerche per visita", () => {
+    const r = riepilogo([...righe, { src: "ig", tipo: "visita", n: 40 }]);
+    expect(r[0]).toMatchObject({ canale: "ig", visite: 40, ricerchePerVisita: "25%" });
+    expect(r.find((x) => x.canale === "diretto")).toMatchObject({ visite: 0, ricerchePerVisita: "–" });
+    expect(r.at(-1)).toMatchObject({ visite: 40 });
+  });
+
   it("click per ricerca in percentuale, trattino se non ci sono ricerche", () => {
     const r = riepilogo([...righe, { src: "tg", tipo: "click", n: 1 }]);
     expect(r.find((x) => x.canale === "ig")!.clickPerRicerca).toBe("40%");
@@ -77,9 +84,14 @@ describe("visiteDaGraphql", () => {
 });
 
 describe("tabella", () => {
-  it("mette le visite in testa quando ci sono, e spiega come attivarle quando mancano", () => {
+  it("mette le visite di Web Analytics in testa quando ci sono, e spiega come attivarle quando mancano", () => {
     const r = riepilogo([{ src: "ig", tipo: "ricerca", n: 2 }]);
-    expect(tabella(r, 7, { totale: 20, perProvenienza: [{ provenienza: "l.instagram.com", visite: 20 }] })).toMatch(/Visite: 20/);
+    expect(tabella(r, 7, { totale: 20, perProvenienza: [{ provenienza: "l.instagram.com", visite: 20 }] })).toMatch(/Web Analytics, visite per provenienza: 20/);
     expect(tabella(r, 7, null)).toMatch(/docs\/statistiche\.md/);
+  });
+
+  it("colonna visite per canale nella tabella", () => {
+    const t = tabella(riepilogo([{ src: "ig-ads", tipo: "visita", n: 8 }, { src: "ig-ads", tipo: "ricerca", n: 2 }]), 7, null);
+    expect(t).toMatch(/ig-ads\s+8\s+25%\s+2/);
   });
 });

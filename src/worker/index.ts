@@ -21,7 +21,8 @@ import { sicuro } from "./store/sicuro";
 
 const COOKIE = "cr_vid";
 const COOKIE_RE = /^[\w-]{10,64}$/;
-const TIPI_EVENTO_PUBBLICI = new Set(["click", "carrello", "condivisione"]);
+const TIPI_EVENTO_PUBBLICI = new Set(["visita", "click", "carrello", "condivisione"]);
+const PAGINE_VISITA = new Set(["home", "condivisa"]);
 
 const fetchGlobale: typeof fetch = (i, init) => fetch(i, init);
 
@@ -121,13 +122,16 @@ app.post("/api/evento", async (c) => {
   if (typeof tipo !== "string" || !TIPI_EVENTO_PUBBLICI.has(tipo)) return c.json({ errore: "tipo" }, 400);
   if (asin !== undefined && (typeof asin !== "string" || !ASIN_RE.test(asin))) return c.json({ errore: "asin" }, 400);
   if (risultatoId !== undefined && (typeof risultatoId !== "string" || !ID_RE.test(risultatoId))) return c.json({ errore: "id" }, 400);
+  const pagina = body.pagina;
+  if (tipo === "visita" && (typeof pagina !== "string" || !PAGINE_VISITA.has(pagina))) return c.json({ errore: "pagina" }, 400);
   await sicuro(() =>
     registraEvento(
       c.env.DB,
       {
-        tipo: tipo as "click" | "carrello" | "condivisione",
+        tipo: tipo as "visita" | "click" | "carrello" | "condivisione",
         asin: (asin as string | undefined) ?? null,
         risultatoId: (risultatoId as string | undefined) ?? null,
+        dettaglio: tipo === "visita" ? (pagina as string) : null,
         src: pulisciSrc(body.src),
       },
       new Date(),

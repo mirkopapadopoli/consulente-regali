@@ -124,6 +124,19 @@ describe("eseguiRicerca", () => {
     expect(d.capire).not.toHaveBeenCalled();
   });
 
+  it("risposta dalla cache richieste → registra comunque la ricerca, con dettaglio cache e src", async () => {
+    const r = richiesta({ testo: "Nonno pescatore, 30€", src: "ig-ads" });
+    await esegui(r, deps());
+    await esegui({ ...r, src: "ig-dm" }, deps());
+    const righe = await testEnv()
+      .DB.prepare("SELECT dettaglio, src FROM eventi WHERE tipo = 'ricerca' AND src IN ('ig-ads','ig-dm') ORDER BY id")
+      .all();
+    expect(righe.results).toEqual([
+      { dettaglio: "completa", src: "ig-ads" },
+      { dettaglio: "cache", src: "ig-dm" },
+    ]);
+  });
+
   it("forzaLeggera (Turnstile irraggiungibile) → leggera senza checkSpesa né Apify", async () => {
     const d = deps();
     expect(tipi(await esegui(richiesta({ forzaLeggera: true }), d))).toEqual(["capito", "risultati:leggera", "salvato"]);

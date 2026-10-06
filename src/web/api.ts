@@ -46,7 +46,7 @@ export async function leggiRisultatoPubblico(id: string): Promise<RisultatoPubbl
 }
 
 /** Misurazione: se fallisce si perde il conteggio, mai la commissione (link diretti). */
-export function inviaEvento(e: { tipo: "click" | "carrello" | "condivisione"; asin?: string; risultatoId?: string | null; src?: string | null }): void {
+export function inviaEvento(e: { tipo: "visita" | "click" | "carrello" | "condivisione"; asin?: string; risultatoId?: string | null; pagina?: "home" | "condivisa"; src?: string | null }): void {
   const payload = JSON.stringify({ ...e, risultatoId: e.risultatoId ?? undefined, src: e.src ?? undefined });
   try {
     if (!navigator.sendBeacon?.("/api/evento", new Blob([payload], { type: "application/json" }))) {

@@ -16,3 +16,16 @@ export function attivaAnalytics(token: string): void {
   s.setAttribute("data-cf-beacon", b.dati);
   document.head.appendChild(s);
 }
+
+type Archivio = Pick<Storage, "getItem" | "setItem">;
+
+/** Vero solo alla prima pagina della sessione, così un ricaricamento non conta come nuova visita. */
+export function primaVisita(archivio: Archivio): boolean {
+  try {
+    if (archivio.getItem("visita")) return false;
+    archivio.setItem("visita", "1");
+  } catch {
+    /* storage bloccato: meglio contare una visita in più che perderla */
+  }
+  return true;
+}

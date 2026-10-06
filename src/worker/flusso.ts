@@ -42,6 +42,7 @@ export async function eseguiRicerca(req: RichiestaRicerca, d: DipendenzeFlusso, 
     const id = await sicuro(() => leggiCacheRichiesta(d.db, hash, d.now()));
     const salvato = id ? await sicuro(() => leggiRisultato(d.db, id)) : null;
     if (salvato && salvato.modalita === "completa") {
+      await sicuro(() => registraEvento(d.db, { tipo: "ricerca", risultatoId: salvato.id, dettaglio: "cache", src: req.src }, d.now()));
       await emetti({ tipo: "capito", capito: salvato.capito });
       await emetti({ tipo: "risultati", modalita: "completa", scelte: salvato.scelte, idee: salvato.idee });
       await emetti({ tipo: "salvato", id: salvato.id });

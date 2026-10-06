@@ -102,6 +102,24 @@ describe("POST /api/evento", () => {
     expect(r).toEqual({ tipo: "click", asin: "B0D9K2YV5Q", src: "bio" });
   });
 
+  it("registra una visita con fonte e pagina", async () => {
+    const res = await exports.default.fetch("http://localhost/api/evento", {
+      method: "POST",
+      body: JSON.stringify({ tipo: "visita", pagina: "condivisa", src: "ig-dm" }),
+    });
+    expect(res.status).toBe(204);
+    const r = await testEnv().DB.prepare("SELECT tipo, dettaglio, src FROM eventi WHERE tipo = 'visita' AND src = 'ig-dm'").first();
+    expect(r).toEqual({ tipo: "visita", dettaglio: "condivisa", src: "ig-dm" });
+  });
+
+  it("rifiuta una visita con pagina sconosciuta", async () => {
+    const res = await exports.default.fetch("http://localhost/api/evento", {
+      method: "POST",
+      body: JSON.stringify({ tipo: "visita", pagina: "<script>" }),
+    });
+    expect(res.status).toBe(400);
+  });
+
   it("limita gli eventi per IP: una raffica riceve 429 e non scrive su D1", async () => {
     const stati: number[] = [];
     for (let i = 0; i < 25; i++) {

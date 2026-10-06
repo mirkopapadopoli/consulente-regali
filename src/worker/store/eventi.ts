@@ -1,4 +1,4 @@
-export type TipoEvento = "ricerca" | "click" | "carrello" | "condivisione" | "blocco";
+export type TipoEvento = "visita" | "ricerca" | "click" | "carrello" | "condivisione" | "blocco";
 
 export interface NuovoEvento {
   tipo: TipoEvento;
