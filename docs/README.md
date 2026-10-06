@@ -15,6 +15,7 @@
 - [`protezioni.md`](protezioni.md) — le 6 difese di spesa, valori e dove si cambiano
 - [`affiliazione.md`](affiliazione.md) — formati dei link, regole mobile, checklist su telefono
 - [`operazioni.md`](operazioni.md) — segreti, comandi, primo deploy, timeout AI, cosa fare all'avviso
+- [`statistiche.md`](statistiche.md) — visite (Web Analytics), eventi per canale (`?src=`), `npm run numeri`
 
 ## Piani
 

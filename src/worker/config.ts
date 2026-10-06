@@ -13,6 +13,8 @@ export interface Config {
   tettoGiornaliero: number;
   affiliateTag: string;
   turnstileSiteKey: string;
+  /** Token pubblico di Cloudflare Web Analytics; vuoto = nessuna misurazione delle visite. */
+  webAnalyticsToken: string;
   budgetDefault: number;
 }
 
@@ -40,6 +42,7 @@ export function loadConfig(env: Partial<Env>): Config {
     tettoGiornaliero: num(env.TETTO_GIORNALIERO, 150),
     affiliateTag: str(env.AFFILIATE_TAG, "mirkopapadopo-21"),
     turnstileSiteKey: str(env.TURNSTILE_SITE_KEY, ""),
+    webAnalyticsToken: str(env.WEB_ANALYTICS_TOKEN, ""),
     budgetDefault: 100,
   };
 }

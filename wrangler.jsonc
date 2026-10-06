@@ -33,7 +33,9 @@
     "QUOTA_IP": "15",
     "TETTO_GIORNALIERO": "150",
     "AFFILIATE_TAG": "mirkopapadopo-21",
-    "TURNSTILE_SITE_KEY": "0x4AAAAAAFMEtHKtJnE7P3xJ"
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAFMEtHKtJnE7P3xJ",
+    // Token pubblico di Cloudflare Web Analytics (Web Analytics → sito → "Manage site" → snippet JS). Vuoto = visite non misurate.
+    "WEB_ANALYTICS_TOKEN": ""
   },
   "observability": { "enabled": true }
 }

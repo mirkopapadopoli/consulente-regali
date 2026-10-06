@@ -125,8 +125,8 @@ describe("POST /api/evento", () => {
 });
 
 describe("GET /api/config", () => {
-  it("espone sitekey Turnstile e tag affiliato", async () => {
+  it("espone sitekey Turnstile, tag affiliato e token Web Analytics (vuoto se non impostato)", async () => {
     const res = await exports.default.fetch("http://localhost/api/config");
-    expect(await res.json()).toEqual({ turnstileSiteKey: "1x00000000000000000000AA", affiliateTag: "mirkopapadopo-21" });
+    expect(await res.json()).toEqual({ turnstileSiteKey: "1x00000000000000000000AA", affiliateTag: "mirkopapadopo-21", webAnalyticsToken: "" });
   });
 });

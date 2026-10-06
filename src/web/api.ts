@@ -4,6 +4,7 @@ import { creaParserSSE } from "./sse";
 export interface ConfigPubblica {
   turnstileSiteKey: string;
   affiliateTag: string;
+  webAnalyticsToken: string;
 }
 
 export async function getConfig(): Promise<ConfigPubblica> {

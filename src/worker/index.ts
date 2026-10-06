@@ -37,7 +37,7 @@ app.get("/api/salute", (c) => c.json({ ok: true }));
 
 app.get("/api/config", (c) => {
   const cfg = loadConfig(c.env);
-  return c.json({ turnstileSiteKey: cfg.turnstileSiteKey, affiliateTag: cfg.affiliateTag });
+  return c.json({ turnstileSiteKey: cfg.turnstileSiteKey, affiliateTag: cfg.affiliateTag, webAnalyticsToken: cfg.webAnalyticsToken });
 });
 
 app.post("/api/cerca", async (c) => {

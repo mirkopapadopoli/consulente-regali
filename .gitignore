@@ -5,3 +5,4 @@ dist/
 .dev.vars
 .impeccable/review/
 .impeccable/config.local.json
+.numeri.env

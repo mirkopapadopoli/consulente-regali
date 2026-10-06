@@ -19,6 +19,7 @@ export interface Env {
   TETTO_GIORNALIERO?: string;
   AFFILIATE_TAG?: string;
   TURNSTILE_SITE_KEY?: string;
+  WEB_ANALYTICS_TOKEN?: string;
   // segreti
   APIFY_TOKEN: string;
   OPENROUTER_API_KEY: string;
